@@ -1,0 +1,146 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           FLASHFENDER LINK TRACKING SYSTEM                         ║
+║                  Access & Usage Guide                               ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 DASHBOARD ACCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   URL:     https://flashfender.com/tracking
+   PASSWORD: admin123
+
+   1. Open the URL above in your browser
+   2. Enter password: admin123
+   3. Click "Access Dashboard"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 HOW TO CREATE TRACKING LINKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Method 1: Via Dashboard
+   ─────────────────────────
+   1. Login to https://flashfender.com/tracking
+   2. Enter description (e.g., "Facebook Ads - Winter Sale")
+   3. Click "Generate Link"
+   4. Copy your tracking link
+
+   Method 2: Via API (Terminal)
+   ─────────────────────────
+   curl -X POST https://flashfender.com/api/tracking/create \
+     -H "Content-Type: application/json" \
+     -d '{"description":"Your campaign name"}'
+
+   Response:
+   {
+     "success": true,
+     "code": "ABC123",
+     "url": "/t/ABC123",
+     "createdAt": "2026-02-05T21:34:40.001Z"
+   }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 HOW TO VIEW STATS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Dashboard:
+   ──────────────
+   Login to https://flashfender.com/tracking
+
+   API Command:
+   ──────────────
+   curl -X POST https://flashfender.com/api/tracking/stats \
+     -H "Content-Type: application/json" \
+     -d '{"password":"admin123"}'
+
+   Response shows:
+   • code       - The unique tracking code
+   • clicks     - Total number of visits
+   • unique     - Unique visitors (by IP)
+   • lastClick  - Most recent visit time
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 HOW TRACKING WORKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   1. You create a tracking code → gets link: /t/ABC123
+   2. Share that link in your marketing
+   3. Visitor clicks → redirected to flashfender.com
+   4. System records:
+      ✓ Timestamp
+      ✓ IP Address
+      ✓ Browser/Device (User Agent)
+      ✓ Where they came from (Referrer)
+   5. View all data in dashboard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TEST EXAMPLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   # Create a test link
+   curl -X POST https://flashfender.com/api/tracking/create \
+     -H "Content-Type: application/json" \
+     -d '{"description":"Test campaign"}'
+
+   # The response gives you a link like:
+   # https://flashfender.com/t/ABC123
+
+   # Test the redirect
+   curl -I https://flashfender.com/t/ABC123
+   # Should return: HTTP/1.1 302 → Location: https://flashfender.com/
+
+   # View stats
+   curl -X POST https://flashfender.com/api/tracking/stats \
+     -H "Content-Type: application/json" \
+     -d '{"password":"admin123"}'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Issue: 404 on tracking link
+   ─────────────────────────────
+   Make sure you're using: /t/{code}
+   Wrong:  flashfender.com/ABC123
+   Right:  flashfender.com/t/ABC123
+
+   Issue: Can't login to dashboard
+   ────────────────────────────────
+   Password is: admin123
+   Or reset via API:
+   curl -X POST https://flashfender.com/api/tracking/setup \
+     -H "Content-Type: application/json" \
+     -d '{"password":"newpassword"}'
+
+   Issue: Container not running
+   ─────────────────────────────
+   lxc exec flashfender-web -- systemctl status flashfender
+
+   Issue: Reset everything
+   ─────────────────────────────
+   lxc exec flashfender-web -- rm -f /root/tracking-db.json
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 QUICK COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   lxc exec flashfender-web -- systemctl restart flashfender
+   lxc exec flashfender-web -- cat /root/tracking-db.json
+   lxc list flashfender-web
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SYSTEM STATUS: WORKING
+
+   Last Updated: 2026-02-05
+   Dashboard: https://flashfender.com/tracking
+   Password: admin123
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,304 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           FLASHFENDER - COMPLETE MOVABLE PACKAGE                         ║
+║              Website + Link Tracking System                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+PACKAGE CONTENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+  📁 flashfender-deploy/
+  ├── 📄 deploy.sh                    # One-click deployment script
+  ├── 📄 DEPLOYMENT-GUIDE.txt         # This file
+  ├── 📄 TRACKING_GUIDE.txt           # Tracking system instructions
+  │
+  ├── 📁 app/                         # Next.js application
+  │   ├── 📄 page.tsx                 # Homepage
+  │   ├── 📄 layout.tsx                # Root layout
+  │   ├── 📄 globals.css               # Global styles
+  │   │
+  │   ├── 📁 company/                 # Company pages
+  │   │   ├── 📄 about/page.tsx
+  │   │   ├── 📄 blog/page.tsx
+  │   │   └── 📄 careers/page.tsx
+  │   │
+  │   ├── 📁 features/                 # Features page
+  │   ├── 📁 pricing/                  # Pricing page
+  │   ├── 📁 contact/                  # Contact page
+  │   ├── 📁 demo/                     # Demo page
+  │   ├── 📁 how-it-works/             # How it works
+  │   ├── 📁 analytics/                 # Analytics
+  │   ├── 📁 resources/                # Documentation, API, etc
+  │   │
+  │   ├── 📁 tracking/                 # 🔐 TRACKING DASHBOARD
+  │   │   └── 📄 page.tsx              # Dashboard UI
+  │   │
+  │   ├── 📁 t/[code]/                 # 🔗 TRACKING REDIRECT
+  │   │   └── 📄 route.ts              # Redirect handler
+  │   │
+  │   └── 📁 api/tracking/             # 📡 API ENDPOINTS
+  │       ├── 📄 create/route.ts       # Create tracking code
+  │       ├── 📄 stats/route.ts        # Get statistics
+  │       └── 📄 setup/route.ts        # Set password
+  │
+  ├── 📁 components/                   # React components
+  │   ├── 📁 home/                     # Homepage components
+  │   ├── 📁 layout/                  # Layout components
+  │   │   ├── 📄 navbar.tsx
+  │   │   └── 📄 footer.tsx
+  │   └── 📁 ui/                      # UI components
+  │
+  ├── 📁 lib/                         # Libraries
+  │   ├── 📄 tracking/db.ts           # Tracking database
+  │
+  ├── 📁 public/                      # Static assets
+  │   ├── 📁 images/                  # All images
+  │   └── 📄 *.svg                   # Icons
+  │
+  ├── 📄 package.json                  # NPM dependencies
+  ├── 📄 package-lock.json             # NPM lock file
+  ├── 📄 tsconfig.json                 # TypeScript config
+  ├── 📄 next.config.ts                # Next.js config
+  ├── 📄 postcss.config.mjs            # PostCSS config
+  ├── 📄 eslint.config.mjs             # ESLint config
+  └── 📄 components.json              # Shadcn components config
+
+
+═══════════════════════════════════════════════════════════════════════════════
+QUICK DEPLOYMENT (NEW SERVER)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Upload to new server:
+   ─────────────────────────
+   scp flashfender-deploy.tar.gz user@your-server:/root/
+
+2. SSH into server and extract:
+   ─────────────────────────
+   ssh user@your-server
+   cd /root
+   tar -xzf flashfender-deploy.tar.gz
+   cd flashfender-deploy
+
+3. Run deployment script:
+   ─────────────────────────
+   chmod +x deploy.sh
+   ./deploy.sh
+
+4. Follow prompts:
+   ─────────────────────────
+   - Enter domain name
+   - Enter email for SSL
+   - Set tracking dashboard password
+
+5. Done! 🎉
+   ─────────────────────────
+   Website: https://yourdomain.com
+   Dashboard: https://yourdomain.com/tracking
+
+
+═══════════════════════════════════════════════════════════════════════════════
+MANUAL DEPLOYMENT (STEP BY STEP)
+═══════════════════════════════════════════════════════════════════════════════
+
+PREREQUISITES:
+──────────────
+  • Ubuntu 22.04+
+  • Node.js 20+
+  • Nginx
+  • Certbot (for SSL)
+  • Domain DNS pointing to server
+
+STEP 1: INSTALL NODE.JS
+────────────────────────
+  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+  apt install nodejs -y
+
+STEP 2: INSTALL NGINX & SSL TOOLS
+──────────────────────────────────
+  apt install nginx certbot python3-certbot-nginx -y
+
+STEP 3: UPLOAD FILES
+────────────────────
+  Upload the entire flashfender-deploy folder to /root/
+
+STEP 4: INSTALL DEPENDENCIES
+────────────────────────────
+  cd /root/flashfender-deploy
+  npm install
+
+STEP 5: BUILD APPLICATION
+─────────────────────────
+  npm run build
+
+STEP 6: CONFIGURE NGINX
+───────────────────────
+  cat > /etc/nginx/sites-available/yourdomain.com.conf << 'EOF'
+  server {
+      server_name yourdomain.com www.yourdomain.com;
+
+      location / {
+          proxy_pass http://localhost:3000;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection 'upgrade';
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_cache_bypass $http_upgrade;
+      }
+
+      listen 443 ssl;
+      ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+      include /etc/letsencrypt/options-ssl-nginx.conf;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+  }
+
+  server {
+      if ($host = www.yourdomain.com) {
+          return 301 https://$host$request_uri;
+      }
+      if ($host = yourdomain.com) {
+          return 301 https://$host$request_uri;
+      }
+      server_name yourdomain.com www.yourdomain.com;
+      listen 80;
+      return 404;
+  }
+  EOF
+
+  ln -sf /etc/nginx/sites-available/yourdomain.com.conf /etc/nginx/sites-enabled/
+  nginx -t
+  systemctl reload nginx
+
+STEP 7: GET SSL CERTIFICATE
+───────────────────────────
+  certbot --nginx -d yourdomain.com -d www.yourdomain.com \
+      --non-interactive --agree-tos --email admin@yourdomain.com
+
+STEP 8: CREATE SYSTEMD SERVICE
+──────────────────────────────
+  cat > /etc/systemd/system/flashfender.service << 'EOF'
+  [Unit]
+  Description=FlashFender Next.js App
+  After=network.target
+
+  [Service]
+  Type=simple
+  User=root
+  WorkingDirectory=/root/flashfender-deploy
+  ExecStart=/usr/bin/npm start
+  Restart=always
+  RestartSec=10
+  Environment=PORT=3000
+  Environment=NODE_ENV=production
+
+  [Install]
+  WantedBy=multi-user.target
+  EOF
+
+  systemctl daemon-reload
+  systemctl enable flashfender
+  systemctl start flashfender
+
+STEP 9: SET TRACKING PASSWORD
+──────────────────────────────
+  curl -X POST http://localhost:3000/api/tracking/setup \
+      -H "Content-Type: application/json" \
+      -d '{"password":"yourpassword"}'
+
+STEP 10: VERIFY
+───────────────
+  systemctl status flashfender
+  curl -I https://yourdomain.com
+  curl -I https://yourdomain.com/tracking
+
+
+═══════════════════════════════════════════════════════════════════════════════
+TRACKING SYSTEM USAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+DASHBOARD ACCESS:
+  URL:      https://yourdomain.com/tracking
+  Password: (set during deployment)
+
+CREATE TRACKING LINK:
+  curl -X POST https://yourdomain.com/api/tracking/create \
+      -H "Content-Type: application/json" \
+      -d '{"description":"Facebook Ads Campaign"}'
+
+  Response: {"success":true,"code":"ABC123","url":"/t/ABC123"}
+
+VIEW STATS:
+  curl -X POST https://yourdomain.com/api/tracking/stats \
+      -H "Content-Type: application/json" \
+      -d '{"password":"yourpassword"}'
+
+TEST REDIRECT:
+  curl -I https://yourdomain.com/t/ABC123
+  → Redirects to https://yourdomain.com
+
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT FILES
+═══════════════════════════════════════════════════════════════════════════════
+
+  📄 /root/flashfender-deploy/app/tracking/page.tsx
+     → Dashboard frontend (React component)
+
+  📄 /root/flashfender-deploy/app/t/[code]/route.ts
+     → Redirect handler (catches clicks)
+
+  📄 /root/flashfender-deploy/app/api/tracking/
+     → API endpoints
+
+  📄 /root/flashfender-deploy/lib/tracking/db.ts
+     → Database logic (JSON file)
+
+  📄 /root/tracking-db.json
+     → Database file (created after first use)
+
+  📄 /var/log/letsencrypt/yourdomain.com.log
+     → SSL certificate logs
+
+
+═══════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+SERVICE WON'T START:
+  journalctl -u flashfender -f
+  → Check error messages
+
+SSL RENEWAL:
+  certbot renew --dry-run
+  systemctl restart flashfender
+
+RESET TRACKING PASSWORD:
+  curl -X POST http://localhost:3000/api/tracking/setup \
+      -H "Content-Type: application/json" \
+      -d '{"password":"newpassword"}'
+
+RESET ALL TRACKING DATA:
+  rm -f /root/tracking-db.json
+  systemctl restart flashfender
+
+CHECK NGINX:
+  nginx -t
+  systemctl status nginx
+
+VIEW ALL TRACKING CODES:
+  cat /root/tracking-db.json
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PACKAGE INFO
+═══════════════════════════════════════════════════════════════════════════════
+
+  Created: 2026-02-05
+  Version: 1.0
+  Framework: Next.js 16
+  Node.js: 20+
+  Platform: Ubuntu 22.04+
+
+═══════════════════════════════════════════════════════════════════════════════
