@@ -66,29 +66,29 @@ export function Navbar() {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled 
-            ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/50" 
+          isScrolled
+            ? "bg-[#0a0a0f]/95 backdrop-blur-md shadow-sm border-b border-quantum-border"
             : "bg-transparent"
         }`}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center space-x-2 group"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                  isScrolled ? "bg-red-600" : "bg-white"
-                } shadow-lg group-hover:shadow-xl`}
+                  isScrolled ? "bg-quantum-cyan" : "bg-quantum-cyan/20 border border-quantum-cyan/50"
+                } shadow-lg group-hover:shadow-xl quantum-glow-cyan`}
               >
-                <span className={`text-xl font-bold ${isScrolled ? "text-white" : "text-red-600"}`}>F</span>
+                <span className={`text-xl font-bold ${isScrolled ? "text-black" : "text-quantum-cyan"}`}>F</span>
               </motion.div>
-              <span className={`font-bold text-xl transition-colors ${
-                isScrolled ? "text-slate-900" : "text-slate-900 md:text-white"
+              <span className={`font-bold text-xl transition-colors font-mono ${
+                isScrolled ? "text-white" : "text-white/90"
               }`}>
                 FlashFender
               </span>
@@ -102,13 +102,14 @@ export function Navbar() {
                 onMouseEnter={() => setActiveDropdown("products")}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button 
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isScrolled 
-                      ? "text-slate-600 hover:text-slate-900 hover:bg-slate-100" 
-                      : "text-slate-700 md:text-white/90 hover:text-white hover:bg-white/10"
-                  } ${activeDropdown === "products" ? "bg-slate-100" : ""}`}
+                <button
+                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium font-mono transition-colors ${
+                    isScrolled
+                      ? "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                      : "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                  } ${activeDropdown === "products" ? "bg-quantum-cyan/10 text-quantum-cyan" : ""}`}
                 >
+                  <span className="opacity-50">{'//'}</span>
                   <span>Products</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === "products" ? "rotate-180" : ""}`} />
                 </button>
@@ -120,28 +121,28 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
+                      className="absolute top-full left-0 mt-2 w-72 quantum-glass rounded-2xl border border-quantum-border overflow-hidden"
                     >
                       <div className="p-2">
                         {navigation.products.map((item) => (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group"
+                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-quantum-cyan/10 transition-colors group"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                              <item.icon className="w-5 h-5 text-slate-600 group-hover:text-red-600" />
+                            <div className="w-10 h-10 rounded-lg bg-quantum-cyan/10 flex items-center justify-center group-hover:bg-quantum-cyan/20 transition-colors">
+                              <item.icon className="w-5 h-5 text-quantum-cyan group-hover:text-white" />
                             </div>
                             <div>
-                              <div className="font-semibold text-slate-900">{item.name}</div>
-                              <div className="text-xs text-slate-500">{item.description}</div>
+                              <div className="font-semibold text-white">{item.name}</div>
+                              <div className="text-xs text-white/50 font-mono">{item.description}</div>
                             </div>
                           </Link>
                         ))}
                       </div>
-                      <div className="border-t border-slate-100 p-3 bg-slate-50/50">
-                        <Link href="/demo" className="flex items-center justify-between text-sm font-medium text-slate-700 hover:text-red-600 transition-colors">
-                          <span>View all features</span>
+                      <div className="border-t border-quantum-border p-3 bg-quantum-cyan/5">
+                        <Link href="/demo" className="flex items-center justify-between text-sm font-medium text-quantum-cyan hover:text-white transition-colors">
+                          <span className="font-mono">View all features</span>
                           <ArrowRight className="w-4 h-4" />
                         </Link>
                       </div>
@@ -156,13 +157,14 @@ export function Navbar() {
                 onMouseEnter={() => setActiveDropdown("company")}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button 
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isScrolled 
-                      ? "text-slate-600 hover:text-slate-900 hover:bg-slate-100" 
-                      : "text-slate-700 md:text-white/90 hover:text-white hover:bg-white/10"
-                  } ${activeDropdown === "company" ? "bg-slate-100" : ""}`}
+                <button
+                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium font-mono transition-colors ${
+                    isScrolled
+                      ? "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                      : "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                  } ${activeDropdown === "company" ? "bg-quantum-cyan/10 text-quantum-cyan" : ""}`}
                 >
+                  <span className="opacity-50">{'//'}</span>
                   <span>Company</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === "company" ? "rotate-180" : ""}`} />
                 </button>
@@ -174,21 +176,21 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
+                      className="absolute top-full left-0 mt-2 w-56 quantum-glass rounded-2xl border border-quantum-border overflow-hidden"
                     >
                       <div className="p-2">
                         {navigation.company.map((item) => (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group"
+                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-quantum-cyan/10 transition-colors group"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                              <item.icon className="w-5 h-5 text-slate-600 group-hover:text-blue-600" />
+                            <div className="w-10 h-10 rounded-lg bg-quantum-cyan/10 flex items-center justify-center group-hover:bg-quantum-cyan/20 transition-colors">
+                              <item.icon className="w-5 h-5 text-quantum-cyan group-hover:text-white" />
                             </div>
                             <div>
-                              <div className="font-semibold text-slate-900">{item.name}</div>
-                              <div className="text-xs text-slate-500">{item.description}</div>
+                              <div className="font-semibold text-white">{item.name}</div>
+                              <div className="text-xs text-white/50 font-mono">{item.description}</div>
                             </div>
                           </Link>
                         ))}
@@ -204,13 +206,14 @@ export function Navbar() {
                 onMouseEnter={() => setActiveDropdown("resources")}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button 
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isScrolled 
-                      ? "text-slate-600 hover:text-slate-900 hover:bg-slate-100" 
-                      : "text-slate-700 md:text-white/90 hover:text-white hover:bg-white/10"
-                  } ${activeDropdown === "resources" ? "bg-slate-100" : ""}`}
+                <button
+                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium font-mono transition-colors ${
+                    isScrolled
+                      ? "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                      : "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                  } ${activeDropdown === "resources" ? "bg-quantum-cyan/10 text-quantum-cyan" : ""}`}
                 >
+                  <span className="opacity-50">{'//'}</span>
                   <span>Resources</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === "resources" ? "rotate-180" : ""}`} />
                 </button>
@@ -222,21 +225,21 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
+                      className="absolute top-full left-0 mt-2 w-56 quantum-glass rounded-2xl border border-quantum-border overflow-hidden"
                     >
                       <div className="p-2">
                         {navigation.resources.map((item) => (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group"
+                            className="flex items-start space-x-3 p-3 rounded-xl hover:bg-quantum-cyan/10 transition-colors group"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                              <item.icon className="w-5 h-5 text-slate-600 group-hover:text-green-600" />
+                            <div className="w-10 h-10 rounded-lg bg-quantum-cyan/10 flex items-center justify-center group-hover:bg-quantum-cyan/20 transition-colors">
+                              <item.icon className="w-5 h-5 text-quantum-cyan group-hover:text-white" />
                             </div>
                             <div>
-                              <div className="font-semibold text-slate-900">{item.name}</div>
-                              <div className="text-xs text-slate-500">{item.description}</div>
+                              <div className="font-semibold text-white">{item.name}</div>
+                              <div className="text-xs text-white/50 font-mono">{item.description}</div>
                             </div>
                           </Link>
                         ))}
@@ -247,34 +250,35 @@ export function Navbar() {
               </div>
 
               {/* Simple Links */}
-              <Link 
+              <Link
                 href="/how-it-works"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isScrolled 
-                    ? "text-slate-600 hover:text-slate-900 hover:bg-slate-100" 
-                    : "text-slate-700 md:text-white/90 hover:text-white hover:bg-white/10"
-                } ${isActive("/how-it-works") ? "bg-slate-100" : ""}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium font-mono transition-colors ${
+                  isScrolled
+                    ? "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                    : "text-white/70 hover:text-quantum-cyan hover:bg-quantum-cyan/10"
+                } ${isActive("/how-it-works") ? "bg-quantum-cyan/10 text-quantum-cyan" : ""}`}
               >
-                How It Works
+                <span className="opacity-50">{'//'}</span> How It Works
               </Link>
             </div>
 
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              <Link 
+              <Link
                 href="/login"
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  isScrolled ? "text-slate-600 hover:text-slate-900" : "text-slate-700 md:text-white/90 hover:text-white"
+                className={`px-4 py-2 text-sm font-medium font-mono transition-colors ${
+                  isScrolled ? "text-white/70 hover:text-quantum-cyan" : "text-white/70 hover:text-quantum-cyan"
                 }`}
               >
                 Log in
               </Link>
               <Link href="/demo">
-                <Button 
+                <Button
                   size="sm"
-                  className="bg-red-600 hover:bg-red-700 text-white rounded-full font-medium px-6 shadow-lg shadow-red-600/20 hover:shadow-xl transition-all hover:scale-105"
+                  className="bg-quantum-cyan hover:bg-white text-black rounded-none font-mono font-semibold px-6 shadow-lg shadow-quantum-cyan/20 hover:shadow-xl transition-all hover:scale-105 border border-quantum-cyan"
+                  style={{ background: "var(--quantum-cyan)", color: "var(--quantum-bg-primary)" }}
                 >
-                  Get Started
+                  Initialize
                 </Button>
               </Link>
             </div>

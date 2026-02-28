@@ -2,228 +2,291 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Check, Zap, ChevronDown, MousePointer2 } from "lucide-react";
+import { ArrowRight, Play, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ParticleCanvas } from "@/components/effects/particle-canvas";
+import { HudStatBox } from "@/components/ui/hud-label";
 
 export function Hero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [counters, setCounters] = useState({ platforms: 0, seconds: 0, unique: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-
-  // Counter animation
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const duration = 2000;
-    const steps = 60;
-    const interval = duration / steps;
-
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-
-      setCounters({
-        platforms: Math.round(10 * easeOut),
-        seconds: Math.round(30 * easeOut),
-        unique: Math.round(100 * easeOut)
-      });
-
-      if (step >= steps) clearInterval(timer);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [isVisible]);
 
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white">
-      {/* Animated Mesh Gradient Background */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div 
-          className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-red-100/40 rounded-full blur-[150px] animate-pulse"
-          style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)` }}
-        />
-        <div 
-          className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-100/40 rounded-full blur-[150px] animate-pulse"
-          style={{ animationDelay: "2s", transform: `translate(${mousePosition.x * -0.3}px, ${mousePosition.y * -0.3}px)` }}
-        />
-        <div 
-          className="absolute top-[30%] left-[30%] w-[40%] h-[40%] bg-purple-100/30 rounded-full blur-[100px]"
-          style={{ transform: `translate(${mousePosition.x * -0.2}px, ${mousePosition.y * -0.2}px)` }}
-        />
-      </div>
+    <section className="relative min-h-screen flex overflow-hidden bg-quantum-bg-primary">
+      {/* Tech Grid Background */}
+      <div className="absolute inset-0 tech-grid opacity-50" />
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 z-0">
-        <div 
-          className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"
-        />
-      </div>
+      {/* Split Screen Layout */}
+      <div className="relative w-full min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-red-500/20 rounded-full"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + (i % 3) * 20}%`,
-              animation: `float-particle ${8 + i * 2}s ease-in-out infinite`,
-              animationDelay: `${i * 0.5}s`
-            }}
-          />
-        ))}
-      </div>
+        {/* Center Divider */}
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-quantum-border z-20 hidden lg:block" />
 
-      <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          {/* Centered Content */}
-          <div className="text-center space-y-8">
-            {/* Floating Badge */}
+        {/* LEFT PANE - Typography & UI */}
+        <div className="relative z-10 flex flex-col justify-center px-6 lg:px-16 py-20 lg:py-0">
+          {/* Background Schematic (barely visible) */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+            <svg className="w-full h-full" viewBox="0 0 800 600">
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-quantum-cyan" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              {/* Quantum circuit lines */}
+              <path d="M 100 200 L 200 200 L 200 150 L 300 150 L 300 250 L 400 250" fill="none" stroke="currentColor" strokeWidth="1" className="text-quantum-cyan" />
+              <path d="M 150 400 L 250 400 L 250 350 L 350 350 L 350 450 L 450 450" fill="none" stroke="currentColor" strokeWidth="1" className="text-quantum-violet" />
+              <circle cx="300" cy="250" r="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-quantum-cyan" />
+              <circle cx="350" cy="450" r="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-quantum-violet" />
+            </svg>
+          </div>
+
+          <div className="max-w-xl">
+            {/* Overline */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center space-x-2 bg-white/90 border border-slate-200 rounded-full px-5 py-2.5 hover:bg-white transition-colors backdrop-blur-md shadow-sm group cursor-pointer"
-              onClick={scrollToContent}
+              className="font-mono text-xs tracking-[0.3em] uppercase text-quantum-cyan mb-6"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span className="text-sm font-medium text-slate-700 group-hover:text-red-600 transition-colors">v2.0 Now Available</span>
-              <ChevronDown className="w-4 h-4 text-slate-500" />
+              <span className="opacity-50">{'//'}</span> Generate Once, Publish Everywhere
             </motion.div>
 
             {/* Main Headline */}
             <motion.h1
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-[1.1]"
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
+              <span className="block text-white">
+                One piece of
+              </span>
+              <span className="block text-quantum-cyan font-light">
+                content.
+              </span>
+              <span className="block text-white mt-2">
+                Every platform.
+              </span>
+              <span className="block text-quantum-violet font-light">
+                Instantly.
+              </span>
+            </motion.h1>
+
+            {/* Description */}
+            <motion.p
+              className="font-mono text-sm text-white/60 leading-relaxed mb-8 max-w-md"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Zero-latency neural bridging enables simultaneous multi-platform syndication.
+              Our quantum-ready architecture processes vehicle data streams with{' '}
+              <span className="text-quantum-cyan">sub-millisecond</span> precision.
+            </motion.p>
+
+            {/* Buttons */}
+            <motion.div
+              className="flex flex-wrap gap-4 mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              {/* Sign in with tech brackets */}
+              <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-quantum-cyan to-quantum-violet rounded-lg opacity-50 blur transition duration-500 group-hover:opacity-100" />
+                <Button
+                  size="lg"
+                  className="relative bg-quantum-bg-primary/80 backdrop-blur-sm border border-quantum-cyan/30 text-white hover:bg-quantum-cyan/10 rounded-lg font-mono text-sm px-6 py-3"
+                >
+                  Sign in
+                </Button>
+              </div>
+
+              {/* Learn more - solid */}
+              <Button
+                size="lg"
+                className="bg-quantum-cyan text-quantum-bg-primary hover:bg-white font-semibold rounded-lg px-6 py-3 transition-all hover:scale-105"
+              >
+                Learn more
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </motion.div>
+
+            {/* Stats Row */}
+            <motion.div
+              className="flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <HudStatBox value="128Q" label="Quantum" />
+              <HudStatBox value="0.01ms" label="Latency" />
+              <HudStatBox value="10+" label="Platforms" />
+              <HudStatBox value="99.9%" label="Uptime" />
+            </motion.div>
+          </div>
+        </div>
+
+        {/* RIGHT PANE - Particle Visualization */}
+        <div className="relative hidden lg:block">
+          {/* Particle Canvas */}
+          <div className="absolute inset-0">
+            <ParticleCanvas particleCount={8000} />
+          </div>
+
+          {/* HUD Labels floating over particles */}
+          <div className="absolute inset-0 pointer-events-none z-10">
+            {/* HUD Label 1 */}
+            <motion.div
+              className="absolute top-1/4 right-1/4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : 20 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="hud-label">
+                <span className="text-quantum-cyan">Cryo-State:</span> 15mK
+              </div>
+              {/* HUD Line */}
+              <svg className="absolute -left-24 top-1/2 w-24 h-px" viewBox="0 0 96 1">
+                <line x1="0" y1="0" x2="96" y2="0" stroke="rgba(0, 255, 255, 0.3)" strokeWidth="1" />
+              </svg>
+            </motion.div>
+
+            {/* HUD Label 2 */}
+            <motion.div
+              className="absolute top-1/3 left-1/4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: isVisible ? 1 : 0, x: isVisible ? 0 : -20 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              <div className="hud-label">
+                <span className="text-quantum-violet">Entanglement:</span> 847:1
+              </div>
+              {/* HUD Line */}
+              <svg className="absolute -right-24 top-1/2 w-24 h-px" viewBox="0 0 96 1">
+                <line x1="96" y1="0" x2="0" y2="0" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="1" />
+              </svg>
+            </motion.div>
+
+            {/* HUD Label 3 */}
+            <motion.div
+              className="absolute bottom-1/3 right-1/3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+            >
+              <div className="hud-label">
+                <span className="text-quantum-magenta">Neural Sync:</span> Active
+              </div>
+            </motion.div>
+
+            {/* HUD Label 4 */}
+            <motion.div
+              className="absolute bottom-1/4 left-1/3"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -20 }}
+              transition={{ duration: 0.8, delay: 1.4 }}
+            >
+              <div className="hud-label">
+                <span className="text-quantum-orange">Processing:</span> 2.4TB/s
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Radial Glow Backlight */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none">
+            <div
+              className="w-full h-full rounded-full"
+              style={{
+                background: "radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(139, 92, 246, 0.08) 40%, transparent 70%)",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile version - stacked layout */}
+      <div className="lg:hidden relative min-h-screen">
+        <ParticleCanvas particleCount={3000} className="!fixed" />
+
+        <div className="relative z-10 flex flex-col justify-center px-6 py-20">
+          <div className="max-w-xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="font-mono text-xs tracking-[0.3em] uppercase text-quantum-cyan mb-6"
+            >
+              <span className="opacity-50">{'//'}</span> Generate Once, Publish Everywhere
+            </motion.div>
+
+            <motion.h1
+              className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1] mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
+              <span className="block text-white">
+                One piece of
+              </span>
+              <span className="block text-quantum-cyan font-light">
+                content.
+              </span>
+              <span className="block text-white mt-2">
+                Every platform.
+              </span>
+              <span className="block text-quantum-violet font-light">
+                Instantly.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              className="font-mono text-sm text-white/60 leading-relaxed mb-8"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <span className="block text-slate-900">
-                Scale Your
-              </span>
-              <span className="block gradient-text bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-purple-600 to-blue-600">
-                Inventory Reach
-              </span>
-            </motion.h1>
+              Zero-latency neural bridging enables simultaneous multi-platform syndication.
+            </motion.p>
 
-            {/* Subheadline */}
-            <motion.p
-              className="text-lg md:text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
+            <motion.div
+              className="flex flex-wrap gap-4 mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <Button
+                size="lg"
+                className="bg-quantum-bg-primary/80 backdrop-blur-sm border border-quantum-cyan/30 text-white rounded-lg font-mono text-sm px-6 py-3"
+              >
+                Sign in
+              </Button>
+              <Button
+                size="lg"
+                className="bg-quantum-cyan text-quantum-bg-primary hover:bg-white font-semibold rounded-lg px-6 py-3"
+              >
+                Learn more
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </motion.div>
+
+            <motion.div
+              className="flex flex-wrap gap-3"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              The only AI-powered platform that auto-posts your vehicles to 10+ marketplaces instantly. 
-              <span className="text-slate-900 font-medium"> No shadow bans. No manual work. No limits.</span>
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <Button
-                size="lg"
-                className="magnetic-button text-lg px-8 py-6 bg-red-600 text-white hover:bg-red-700 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 w-full sm:w-auto"
-              >
-                Start Free Trial
-                <ArrowRight className="ml-2" size={20} />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 rounded-full border-slate-300 hover:bg-slate-100 backdrop-blur-sm transition-all hover:scale-105 text-slate-700 w-full sm:w-auto"
-              >
-                <Play className="mr-2" size={20} />
-                Watch Demo
-              </Button>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              className="pt-8 flex flex-wrap items-center justify-center gap-6 md:gap-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-            >
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                  <Check className="w-3 h-3 text-green-600" />
-                </div>
-                <span className="font-medium">500+ Dealerships</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Zap className="w-3 h-3 text-blue-600" />
-                </div>
-                <span className="font-medium">10+ Platforms</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Check className="w-3 h-3 text-purple-600" />
-                </div>
-                <span className="font-medium">99.9% Uptime</span>
-              </div>
-            </motion.div>
-
-            {/* Stats Cards */}
-            <motion.div
-              ref={statsRef}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mt-12 max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-            >
-              {/* Stat 1 */}
-              <div className="glass p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group cursor-pointer">
-                <div className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
-                  {counters.platforms}<span className="text-red-600 text-2xl">+</span>
-                </div>
-                <div className="text-sm text-slate-600 font-medium">Platforms Supported</div>
-              </div>
-
-              {/* Stat 2 */}
-              <div className="glass p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group cursor-pointer">
-                <div className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
-                  {counters.seconds}<span className="text-blue-600 text-xl ml-1">sec</span>
-                </div>
-                <div className="text-sm text-slate-600 font-medium">Average Post Time</div>
-              </div>
-
-              {/* Stat 3 */}
-              <div className="glass p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group cursor-pointer">
-                <div className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
-                  {counters.unique}<span className="text-green-600 text-2xl">%</span>
-                </div>
-                <div className="text-sm text-slate-600 font-medium">Unique Content</div>
-              </div>
+              <HudStatBox value="128Q" label="Quantum" />
+              <HudStatBox value="0.01ms" label="Latency" />
+              <HudStatBox value="10+" label="Platforms" />
             </motion.div>
           </div>
         </div>
@@ -231,7 +294,7 @@ export function Hero() {
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer z-30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2 }}
@@ -240,37 +303,17 @@ export function Hero() {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center text-slate-400"
+          className="flex flex-col items-center text-quantum-cyan/50"
         >
-          <MousePointer2 className="w-5 h-5 mb-2" />
-          <div className="w-6 h-10 rounded-full border-2 border-slate-300 flex justify-center pt-2">
+          <div className="w-6 h-10 rounded-full border border-quantum-cyan/30 flex justify-center pt-2">
             <motion.div
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-3 bg-slate-400 rounded-full"
+              className="w-1 h-3 bg-quantum-cyan/50 rounded-full"
             />
           </div>
         </motion.div>
       </motion.div>
-
-      <style jsx global>{`
-        @keyframes float-particle {
-          0%, 100% { 
-            transform: translateY(0) translateX(0); 
-            opacity: 0; 
-          }
-          10% { opacity: 0.6; }
-          50% { 
-            transform: translateY(-50px) translateX(20px); 
-            opacity: 0.3; 
-          }
-          90% { opacity: 0.6; }
-          100% { 
-            transform: translateY(-100px) translateX(-10px); 
-            opacity: 0; 
-          }
-        }
-      `}</style>
     </section>
   );
 }

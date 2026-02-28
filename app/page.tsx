@@ -12,16 +12,21 @@ import { BookingForm } from "@/components/home/booking-form";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-quantum-bg-primary">
       <Hero />
-      <Niches />
-      <Results />
-      <VideoShowcase />
-      <FeatureBento />
-      <PlatformShowcase />
-      <Testimonials />
-      <BlogGrid />
-      <BookingForm />
+      <div className="relative">
+        {/* Section divider line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-quantum-border to-transparent" />
+
+        <Niches />
+        <Results />
+        <VideoShowcase />
+        <FeatureBento />
+        <PlatformShowcase />
+        <Testimonials />
+        <BlogGrid />
+        <BookingForm />
+      </div>
     </main>
   );
 }
